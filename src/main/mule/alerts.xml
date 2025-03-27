@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:cloudhub="http://www.mulesoft.org/schema/mule/cloudhub"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule/cloudhub/current/mule-cloudhub.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<cloudhub:config name="CloudHub_Config" doc:name="CloudHub Config" doc:id="eed83f6d-85f0-4c4c-be68-f7954623f542" >
+		<cloudhub:connection username="aradhya2001" password="Aradhya@01" environment="Production" />
+	</cloudhub:config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="9d881875-70d6-4bfa-b313-4bdddd37a1ad" >
+		<file:connection />
+	</file:config>
+	<!-- [STUDIO:"alertsFlow"]<flow name="alertsFlow" doc:id="b92cf729-6da6-4f60-9103-cb0ce2817846" >
+		<scheduler doc:name="Scheduler" doc:id="4750a194-4322-4102-b027-d404c70f5844" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="10" timeUnit="SECONDS"/>
+			</scheduling-strategy>
+		</scheduler>
+		<ee:transform doc:name="Transform Message" doc:id="3acb19e8-f1d7-483c-80e8-bbe7f57a6b8a">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+{
+	"Message": "Hello Aradhya"
+}&#93;&#93;></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="e57dae6a-c1b4-45b8-a5f9-5f347612a531" message="#[payload&#93;"/>
+	</flow> [STUDIO] -->
+	<flow name="alertsFlow1" doc:id="a4bba0dc-a93f-49e5-b2a3-3ce63858b38d" >
+		<file:listener doc:name="On New or Updated File" doc:id="a8ecd8d0-fc85-4c68-9b35-ca76bfe44b71" config-ref="File_Config" directory="D:/jk">
+			<scheduling-strategy >
+				<fixed-frequency timeUnit="SECONDS" />
+			</scheduling-strategy>
+		</file:listener>
+		<cloudhub:create-notification doc:name="Create Notification" doc:id="d38f4071-4450-408f-a763-56df1f494fe0" config-ref="CloudHub_Config" priority="WARN" transactionId="uuid()"/>
+		<logger level="INFO" doc:name="Logger" doc:id="8364e103-6300-4f2b-9944-675503510c6f" message="end"/>
+	</flow>
+	<flow name="alertsFlow" doc:id="d7629563-90c4-4394-8137-ed5f9a5bd6d0" >
+		<try doc:name="Try" doc:id="ce1bded9-fed6-42d5-9228-ce12ebf372c6" />
+	</flow>
+</mule>
